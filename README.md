@@ -20,3 +20,4 @@ Discord Rich Presence for Elden Ring.
 
 ## Credits
 - Thanks to **techiew** for his [EldenRingMods](https://github.com/techiew/EldenRingMods) code.
+- Thanks to **derfurkan** inspiration and his discord app client from his [Eldenring-Discord-Rich-Presence-Tool](https://github.com/derfurkan/Eldenring-Discord-Rich-Presence-Tool).
