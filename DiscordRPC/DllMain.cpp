@@ -97,9 +97,18 @@ static void UpdateDiscordPresence() {
 			if (pos != std::string::npos) {
 				LargeImageText = location.substr(0, pos);
 				std::string tempImageKey = LargeImageText;
+
+				// Remove all spaces
 				tempImageKey.erase(std::remove(tempImageKey.begin(), tempImageKey.end(), ' '), tempImageKey.end());
+
+				// Remove all non-alphabet characters
+				tempImageKey.erase(std::remove_if(tempImageKey.begin(), tempImageKey.end(),
+					[](char c) { return !std::isalpha(c); }), tempImageKey.end());
+
+				// Convert to lowercase
+				std::transform(tempImageKey.begin(), tempImageKey.end(), tempImageKey.begin(), ::tolower);
+
 				imageKey = tempImageKey;
-				std::transform(imageKey.begin(), imageKey.end(), imageKey.begin(), ::tolower);
 			}
 
 			Log("Updating Discord presence..");
