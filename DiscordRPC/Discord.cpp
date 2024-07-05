@@ -14,7 +14,7 @@ void Discord::initialize(bool setTimestamp)
     memset(&handlers, 0, sizeof(handlers));
     
     // Initialize Discord RPC
-    Discord_Initialize("1243218524554530998", &handlers, 1, NULL);
+    Discord_Initialize("1257349372862009387", &handlers, 1, NULL);
 
     
     // Prepare rich presence struct

@@ -3,6 +3,7 @@
 // Used by DiscordRPC.rc
 //
 #define IDR_JSON1                       101
+#define IDR_JSON2                       102
 
 // Next default values for new objects
 // 

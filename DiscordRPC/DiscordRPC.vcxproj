@@ -85,9 +85,6 @@
   <ItemGroup>
     <ResourceCompile Include="DiscordRPC.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="LocationRegister.json" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -16,54 +16,62 @@ using json = nlohmann::json;
 static Discord* g_discord;
 static MemoryUtility* g_memoryUtility;
 static HMODULE g_hModule = NULL;
-static std::map<long, std::string> locationRegister;
+static json locationRegister;
+static json classesRegister;
 
 
 
-static std::string LoadJsonResource(UINT resourceId) {
-
+static json LoadJsonResource(UINT resourceId) {
 	HRSRC hResource = FindResourceW(g_hModule, MAKEINTRESOURCEW(resourceId), L"JSON");
 	if (!hResource) {
 		Log("Failed to find resource. Resource ID: %d", resourceId);
-		return "";
+		return nullptr;
 	}
 	Log("Resource found successfully. Resource ID: %d", resourceId);
 
 	HGLOBAL hLoadedResource = LoadResource(g_hModule, hResource);
 	if (!hLoadedResource) {
 		Log("Failed to load resource");
-		return "";
+		return nullptr;
 	}
 	Log("Resource loaded successfully.");
 
 	LPVOID pLockedResource = LockResource(hLoadedResource);
 	if (!pLockedResource) {
 		Log("Failed to lock resource");
-		return "";
+		return nullptr;
 	}
 	Log("Resource locked successfully.");
 
 	DWORD resourceSize = SizeofResource(g_hModule, hResource);
 	if (resourceSize == 0) {
 		Log("Resource size is 0");
-		return "";
+		return nullptr;
 	}
 	Log("Resource size: %d", resourceSize);
 
 	std::string jsonData(static_cast<char*>(pLockedResource), resourceSize);
-	return jsonData;
+
+	try {
+		json parsedJson = json::parse(jsonData);
+		return parsedJson;
+	}
+	catch (json::parse_error& e) {
+		Log("JSON parsing error: %s", e.what());
+		return nullptr;
+	}
 }
 
 
 static std::map<long, std::string> DeserializeJsonToMap(const std::string& jsonData) {
-	json j = json::parse(jsonData);
-	std::map<long, std::string> locationRegister;
+    json j = json::parse(jsonData);
+    std::map<long, std::string> data;
 
-	for (auto& element : j.items()) {
-		locationRegister[std::stol(element.key())] = element.value();
-	}
+    for (auto& element : j.items()) {
+        data[std::stol(element.key())] = element.value().dump();
+    }
 
-	return locationRegister;
+    return data;
 }
 
 
@@ -142,19 +150,10 @@ DWORD WINAPI MainThread(LPVOID param) {
 
 	g_discord->initialize();
 	g_memoryUtility->initialize();
-	std::string jsonData = LoadJsonResource(IDR_JSON1);
-	if (!jsonData.empty()) {
-		locationRegister = DeserializeJsonToMap(jsonData);
-		if (!locationRegister.empty()) {
-			Log("Location register loaded successfully");
-		}
-		else {
-			Log("Failed to load location register");
-		}
-	}
-	else {
-		Log("Failed to load JSON data");
-	}
+	locationRegister = LoadJsonResource(IDR_JSON1);
+	classesRegister = LoadJsonResource(IDR_JSON2);
+
+
 
 	// Create a thread to update Discord presence
 	HANDLE hThread = CreateThread(
