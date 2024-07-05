@@ -7,9 +7,13 @@ Discord Rich Presence for Elden Ring.
 - Shows playtime in hours.
 - Shows death count.
 - Shows runes held.
+- Shows current character build.
 - Shows session's player count.
 
-![alt text](https://i.imgur.com/Mz8gvlN.png)
+![In menu](https://i.imgur.com/ytHtdAY.png)
+![Character info mouseover](https://i.imgur.com/FwsDYzH.png)
+![Current location mouseover](https://i.imgur.com/27au9VP.png)
+![In game](https://i.imgur.com/N83doGI.png)
 
 # Installation
 1. Download the latest release from the [releases page](https://github.com/Loukious/EldenRing-DiscordRPC/releases/latest)
