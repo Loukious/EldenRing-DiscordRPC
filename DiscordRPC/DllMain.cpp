@@ -27,28 +27,24 @@ static json LoadJsonResource(UINT resourceId) {
 		Log("Failed to find resource. Resource ID: %d", resourceId);
 		return nullptr;
 	}
-	Log("Resource found successfully. Resource ID: %d", resourceId);
 
 	HGLOBAL hLoadedResource = LoadResource(g_hModule, hResource);
 	if (!hLoadedResource) {
 		Log("Failed to load resource");
 		return nullptr;
 	}
-	Log("Resource loaded successfully.");
 
 	LPVOID pLockedResource = LockResource(hLoadedResource);
 	if (!pLockedResource) {
 		Log("Failed to lock resource");
 		return nullptr;
 	}
-	Log("Resource locked successfully.");
 
 	DWORD resourceSize = SizeofResource(g_hModule, hResource);
 	if (resourceSize == 0) {
 		Log("Resource size is 0");
 		return nullptr;
 	}
-	Log("Resource size: %d", resourceSize);
 
 	std::string jsonData(static_cast<char*>(pLockedResource), resourceSize);
 
@@ -78,10 +74,8 @@ static std::map<long, std::string> DeserializeJsonToMap(const std::string& jsonD
 
 static void UpdateDiscordPresence() {
 	while (true) {
-		Log("Trying to read name..");
 		std::string localPlayerName = g_memoryUtility->ReadPlayerName(0);
 		if (localPlayerName != "") {
-			Log("localPlayerName: %s", localPlayerName.c_str());
 			long level = g_memoryUtility->ReadLocalPlayerLevel();
 			long playTimeMs = g_memoryUtility->ReadPlayTime();
 			long deathCount = g_memoryUtility->ReadDeathCount();
@@ -119,7 +113,6 @@ static void UpdateDiscordPresence() {
 				imageKey = tempImageKey;
 			}
 
-			Log("Updating Discord presence..");
 			DiscordRichPresence discordRichPresence;
 
 			discordRichPresence.state = location.c_str();
