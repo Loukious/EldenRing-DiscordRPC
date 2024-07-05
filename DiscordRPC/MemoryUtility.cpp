@@ -50,6 +50,23 @@ long long MemoryUtility::ReadInt64(DWORD_PTR address) {
     return value;
 }
 
+
+BYTE MemoryUtility::ReadByte(DWORD_PTR address) {
+    if (address == 0) {
+        return static_cast<BYTE>(0);
+    }
+
+    BYTE value = static_cast<BYTE>(0);
+    __try {
+        value = *(BYTE*)address;
+    }
+    __except (EXCEPTION_EXECUTE_HANDLER) {
+        return static_cast<BYTE>(0);
+    }
+
+    return value;
+}
+
 // Function to read a string from the specified memory address
 std::string MemoryUtility::ReadString(DWORD_PTR address, int length) {
     if (address == 0) {
@@ -199,6 +216,63 @@ long MemoryUtility::ReadLastGraceLocationId() {
 	}
 	DWORD_PTR mainAddressValue = ReadInt64(gameManAddress);
 	return ReadInt32(mainAddressValue + 0xB6C);
+}
+
+int MemoryUtility::ReadPlayerClassId() {
+    if (gameDataManAddress == 0) {
+		return 0;
+	}
+    DWORD_PTR mainAddressValue = ReadInt64(gameDataManAddress);
+	mainAddressValue = ReadInt64(mainAddressValue + 0xBF);
+
+    BYTE playerClass = ReadByte(mainAddressValue);
+
+    return static_cast<int>(playerClass);
+}
+
+long MemoryUtility::ReadStrengthAttr() {
+    if (gameDataManAddress == 0) {
+		return 0;
+	}
+	DWORD_PTR mainAddressValue = ReadInt64(gameDataManAddress);
+	mainAddressValue = ReadInt64(mainAddressValue + 0x08);
+	return ReadInt32(mainAddressValue + 0x48);
+}
+
+long MemoryUtility::ReadDexterityAttr() {
+    if (gameDataManAddress == 0) {
+		return 0;
+	}
+	DWORD_PTR mainAddressValue = ReadInt64(gameDataManAddress);
+	mainAddressValue = ReadInt64(mainAddressValue + 0x08);
+	return ReadInt32(mainAddressValue + 0x4C);
+}
+
+long MemoryUtility::ReadIntelligenceAttr() {
+    if (gameDataManAddress == 0) {
+		return 0;
+	}
+	DWORD_PTR mainAddressValue = ReadInt64(gameDataManAddress);
+	mainAddressValue = ReadInt64(mainAddressValue + 0x08);
+	return ReadInt32(mainAddressValue + 0x50);
+}
+
+long MemoryUtility::ReadFaithAttr() {
+    if (gameDataManAddress == 0) {
+		return 0;
+	}
+	DWORD_PTR mainAddressValue = ReadInt64(gameDataManAddress);
+	mainAddressValue = ReadInt64(mainAddressValue + 0x08);
+	return ReadInt32(mainAddressValue + 0x54);
+}
+
+long MemoryUtility::ReadArcaneAttr() {
+    if (gameDataManAddress == 0) {
+		return 0;
+	}
+	DWORD_PTR mainAddressValue = ReadInt64(gameDataManAddress);
+	mainAddressValue = ReadInt64(mainAddressValue + 0x08);
+	return ReadInt32(mainAddressValue + 0x58);
 }
 
 

@@ -20,6 +20,13 @@ public:
     static long ReadDeathCount();
     static long ReadRunesHeld();
     static long ReadLastGraceLocationId();
+    static long ReadStrengthAttr();
+    static long ReadDexterityAttr();
+    static long ReadIntelligenceAttr();
+    static long ReadFaithAttr();
+    static long ReadArcaneAttr();
+    static int ReadPlayerClassId();
+    static BYTE ReadByte(DWORD_PTR address);
     static int CountNetPlayers();
     static void initialize();
 };
