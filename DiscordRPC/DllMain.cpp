@@ -145,6 +145,7 @@ static void UpdateDiscordPresence() {
 			}
 
 			DiscordRichPresence discordRichPresence;
+			memset(&discordRichPresence, 0, sizeof(discordRichPresence));
 
 
 			discordRichPresence.smallImageKey = smallImageKey.c_str();
