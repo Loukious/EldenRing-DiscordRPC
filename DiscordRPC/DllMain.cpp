@@ -164,7 +164,7 @@ static void UpdateDiscordPresence() {
 			discordRichPresence.largeImageText = location.c_str();
 			discordRichPresence.partyId = localPlayerName.c_str();
 			discordRichPresence.partySize = netPlayers;
-			discordRichPresence.partyMax = 10;
+			discordRichPresence.partyMax = 6;
 			discordRichPresence.startTimestamp = Discord::GetStartTime();
 			discordRichPresence.endTimestamp = NULL;
 
