@@ -71,7 +71,7 @@ static std::map<long, std::string> DeserializeJsonToMap(const std::string& jsonD
 }
 
 
-std::map<std::string, long> ReadAllAttributes(MemoryUtility* memoryUtility) {
+static std::map<std::string, long> ReadAllAttributes(MemoryUtility* memoryUtility) {
 	std::map<std::string, long> attrs;
 	attrs["Strength"] = memoryUtility->ReadStrengthAttr();
 	attrs["Dexterity"] = memoryUtility->ReadDexterityAttr();
@@ -81,7 +81,7 @@ std::map<std::string, long> ReadAllAttributes(MemoryUtility* memoryUtility) {
 	return attrs;
 }
 
-std::string GetHighestAttribute(const std::map<std::string, long>& attrs) {
+static std::string GetHighestAttribute(const std::map<std::string, long>& attrs) {
 	auto highest = std::max_element(attrs.begin(), attrs.end(),
 		[](const std::pair<std::string, long>& a, const std::pair<std::string, long>& b) {
 			return a.second < b.second;
@@ -186,7 +186,7 @@ static void UpdateDiscordPresence() {
 	}
 }
 
-DWORD WINAPI MainThread(LPVOID param) {
+static DWORD WINAPI MainThread(LPVOID param) {
 	Log("Activating DiscordRPC..");
 
 	g_discord->initialize();
@@ -220,7 +220,7 @@ DWORD WINAPI MainThread(LPVOID param) {
 }
 
 
-BOOL WINAPI DllMain(HINSTANCE module, DWORD reason, LPVOID reserved) {
+static BOOL WINAPI DllMain(HINSTANCE module, DWORD reason, LPVOID reserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
 		DisableThreadLibraryCalls(module);
 		g_hModule = module;
