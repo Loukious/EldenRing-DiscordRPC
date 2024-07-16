@@ -33,7 +33,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>D:\Apps\EldenRingMods\DiscordRPC\DiscordSDK\include;D:\Apps\EldenRingMods\DiscordRPC\DiscordSDK\src;$(ProjectDir);$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)\DiscordSDK\include;$(ProjectDir)\DiscordSDK\src;$(ProjectDir);$(IncludePath)</IncludePath>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
