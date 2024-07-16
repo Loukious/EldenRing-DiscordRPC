@@ -3,6 +3,7 @@
 #include <thread>
 #include <chrono>
 #include <Utils.h>
+#include <Psapi.h>
 
 const char* gameManPattern = "\x48\x8B\x05\x00\x00\x00\x00\x80\xB8\x00\x00\x00\x00\x0D\x0F\x94\xC0\xC3";
 const char* gameManMask = "xxx????xx????xxxx";
@@ -163,7 +164,11 @@ DWORD_PTR MemoryUtility::FindPattern(DWORD_PTR base, DWORD size, const char* pat
 }
 
 DWORD_PTR MemoryUtility::CalculateAddress(HANDLE hProcess, DWORD_PTR base, const char* pattern, const char* mask, int patternOffset, int addressAdjustment) {
-    DWORD moduleSize = 0x1000000; // Assuming module size
+    MODULEINFO moduleInfo = { 0 };
+    if (!GetModuleInformation(hProcess, reinterpret_cast<HMODULE>(base), &moduleInfo, sizeof(moduleInfo))) {
+        return 0;
+    }
+    DWORD moduleSize = moduleInfo.SizeOfImage;
     std::vector<byte> moduleMemory(moduleSize);
     ReadProcessMemory(hProcess, (LPCVOID)base, moduleMemory.data(), moduleSize, NULL);
 
