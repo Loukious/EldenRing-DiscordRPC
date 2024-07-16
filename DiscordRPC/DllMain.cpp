@@ -169,7 +169,7 @@ static void UpdateDiscordPresence() {
 			discordRichPresence.endTimestamp = NULL;
 
 			if (netPlayers > 1) {
-				stateStr = std::format("Playing with {} others", netPlayers - 1);
+				stateStr = std::format("Playing with {} other(s)", netPlayers - 1);
 			}
 			else {
 				stateStr = "Playing Solo";
