@@ -167,6 +167,8 @@ static void UpdateDiscordPresence() {
 			discordRichPresence.partyMax = 6;
 			discordRichPresence.startTimestamp = Discord::GetStartTime();
 			discordRichPresence.endTimestamp = NULL;
+			discordRichPresence.button1Url = "https://www.nexusmods.com/eldenring/mods/5483";
+			discordRichPresence.button1Label = "Download Mod";
 
 			if (netPlayers > 1) {
 				stateStr = std::format("Playing with {} other(s)", netPlayers - 1);

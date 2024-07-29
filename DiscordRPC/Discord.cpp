@@ -29,6 +29,8 @@ void Discord::initialize(bool setTimestamp)
     discordRichPresence.details = "Playing Elden Ring";
     discordRichPresence.largeImageKey = "none";
     discordRichPresence.largeImageText = "Elden Ring";
+    discordRichPresence.button1Url = "https://www.nexusmods.com/eldenring/mods/5483";
+    discordRichPresence.button1Label = "Download Mod";
 
     // Update Discord presence
     update(discordRichPresence);
