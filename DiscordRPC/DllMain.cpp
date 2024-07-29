@@ -223,7 +223,7 @@ static DWORD WINAPI MainThread(LPVOID param) {
 }
 
 
-static BOOL WINAPI DllMain(HINSTANCE module, DWORD reason, LPVOID reserved) {
+BOOL WINAPI DllMain(HINSTANCE module, DWORD reason, LPVOID reserved) {
 	if (reason == DLL_PROCESS_ATTACH) {
 		DisableThreadLibraryCalls(module);
 		g_hModule = module;
