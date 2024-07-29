@@ -8,8 +8,10 @@
 #include "MemoryUtility.h"
 #include "nlohmann/json.hpp"
 #include <format>
+#include <ini.h>
 
 using namespace Utils;
+using namespace mINI;
 using json = nlohmann::json;
 
 
@@ -18,6 +20,9 @@ static MemoryUtility* g_memoryUtility;
 static HMODULE g_hModule = NULL;
 static json locationRegister;
 static json classesRegister;
+static BOOL showDeathCount = 1;
+static BOOL showPlayTime = 1;
+static BOOL showRunesHeld = 1;
 
 
 
@@ -90,17 +95,43 @@ static std::string GetHighestAttribute(const std::map<std::string, long>& attrs)
 	return highest->first;
 }
 
+static void ReadConfig()
+{
+	INIFile config(GetModFolderPath() + "\\config.ini");
+	INIStructure ini;
+
+	if (config.read(ini))
+	{
+		if (ini["DETAILS"].has("showDeathCount"))
+		{
+			showDeathCount = std::stoi(ini["DETAILS"]["showDeathCount"]);
+		}
+		if (ini["DETAILS"].has("showPlayTime"))
+		{
+			showPlayTime = std::stoi(ini["DETAILS"]["showPlayTime"]);
+		}
+		if (ini["DETAILS"].has("showRunesHeld"))
+		{
+			showRunesHeld = std::stoi(ini["DETAILS"]["showRunesHeld"]);
+		}
+	}
+	else
+	{
+		ini["DETAILS"]["showDeathCount"] = std::to_string(showDeathCount);
+		ini["DETAILS"]["showPlayTime"] = std::to_string(showPlayTime);
+		ini["DETAILS"]["showRunesHeld"] = std::to_string(showRunesHeld);
+		config.write(ini, true);
+	}
+
+}
+
 
 static void UpdateDiscordPresence() {
 	while (true) {
 		std::string localPlayerName = g_memoryUtility->ReadPlayerName(0);
 		if (localPlayerName != "") {
 			long level = g_memoryUtility->ReadLocalPlayerLevel();
-			long playTimeMs = g_memoryUtility->ReadPlayTime();
-			long deathCount = g_memoryUtility->ReadDeathCount();
-			long runesHeld = g_memoryUtility->ReadRunesHeld();
 			std::string locationId = std::to_string(g_memoryUtility->ReadLastGraceLocationId());
-			double playTimeHours = playTimeMs / (1000.0 * 60 * 60);
 			int netPlayers = g_memoryUtility->CountNetPlayers();
 			std::string playerClassId = std::to_string(g_memoryUtility->ReadPlayerClassId());
 			std::string location = "The Lands Between";
@@ -157,12 +188,26 @@ static void UpdateDiscordPresence() {
 			characterInfoStr = std::format("Level {} - {} build",
 				level, highestAttr);
 			discordRichPresence.smallImageText = characterInfoStr.c_str();
-			detailsStr = std::format("| Playtime: {:.2f} hours\n| Deaths: {}\n| Runes Held: {}",
-				 playTimeHours, deathCount, runesHeld);
+
+			if (showPlayTime)
+			{
+				long playTimeMs = g_memoryUtility->ReadPlayTime();
+				double playTimeHours = playTimeMs / (1000.0 * 60 * 60);
+				detailsStr += std::format("| Playtime: {:.2f} hours\n", playTimeHours);
+			}
+			if (showDeathCount)
+			{
+				long deathCount = g_memoryUtility->ReadDeathCount();
+				detailsStr += std::format("| Deaths: {}\n", deathCount);
+			}
+			if (showRunesHeld)
+			{
+				long runesHeld = g_memoryUtility->ReadRunesHeld();
+				detailsStr += std::format("| Runes Held: {}\n", runesHeld);
+			}
 
 			
 			discordRichPresence.largeImageText = location.c_str();
-			discordRichPresence.partyId = localPlayerName.c_str();
 			discordRichPresence.partySize = netPlayers;
 			discordRichPresence.partyMax = 6;
 			discordRichPresence.startTimestamp = Discord::GetStartTime();
@@ -171,7 +216,7 @@ static void UpdateDiscordPresence() {
 			discordRichPresence.button1Label = "Download Mod";
 
 			if (netPlayers > 1) {
-				stateStr = std::format("Playing with {} other(s)", netPlayers - 1);
+				stateStr = std::format("In a Party", netPlayers - 1);
 			}
 			else {
 				stateStr = "Playing Solo";
@@ -196,6 +241,7 @@ static DWORD WINAPI MainThread(LPVOID param) {
 	g_memoryUtility->initialize();
 	locationRegister = LoadJsonResource(IDR_JSON1);
 	classesRegister = LoadJsonResource(IDR_JSON2);
+	ReadConfig();
 
 
 
